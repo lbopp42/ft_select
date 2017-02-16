@@ -52,3 +52,18 @@ t_lst_cir	*del_one_lst_cir(t_lst_cir *list_cir)
 	list_cir = NULL;
 	return (list_cir);
 }
+
+void	print_select_lst_cir(t_lst_cir *list_cir)
+{
+	t_lst_cir	*tmp;
+
+	if (list_cir->select)
+		ft_putstr(list_cir->content);
+	tmp = list_cir->prev;
+	while (tmp != list_cir)
+	{
+		if (tmp->select)
+		ft_putstr(tmp->content);
+		tmp = tmp->prev;
+	}
+}

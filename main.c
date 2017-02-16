@@ -84,12 +84,20 @@ void    check_touch(t_lst_cir **lst_cir, int fd)
         }
         tmp = del_one_lst_cir(tmp);
     }
+    else if (buffer[0] == '\n')
+    {
+        default_term();
+        ft_putstr_fd(tgetstr("te", NULL), fd);
+        ft_putstr_fd(tgetstr("ve", NULL), fd);
+        close(fd);
+        print_select_lst_cir(*lst_cir);
+        exit(0);   
+    }
     open_window(lst_cir, fd);
 }
 
 void    open_window(t_lst_cir **lst_cir, int fd)
 {
-    char        buffer[4];
     t_lst_cir   *tmp;
 
     if (*lst_cir == NULL)

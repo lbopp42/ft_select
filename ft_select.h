@@ -36,5 +36,6 @@ t_lst_cir   *create_lst_cir(char *content);
 void		ft_putlstcir_fd(t_lst_cir *lst_cir, int fd);
 t_lst_cir	*del_one_lst_cir(t_lst_cir *list_cir);
 int			test(int c);
+void		print_select_lst_cir(t_lst_cir *list_cir);
 
 #endif
