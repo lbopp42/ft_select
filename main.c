@@ -36,7 +36,7 @@ void    check_touch(t_lst_cir **lst_cir, int fd)
     t_lst_cir   *tmp;
 
     bzero(buffer, 4);
-    read(0, buffer, 3);
+    read(0, buffer, 4);
     tmp = *lst_cir;
     while (tmp->curseur != 1)
         tmp = tmp->prev;
@@ -48,7 +48,7 @@ void    check_touch(t_lst_cir **lst_cir, int fd)
         close(fd);
         exit(0);
     }
-    else if (buffer[0] == 27 && buffer[1] == 91)
+    else if (buffer[0] == 27 && buffer[1] == 91 && buffer[2] != 51)
     {
         if (buffer[2] == 66)
         {
@@ -69,7 +69,8 @@ void    check_touch(t_lst_cir **lst_cir, int fd)
         tmp->select = tmp->select ? 0 : 1;
         tmp->prev->curseur = 1;
     }
-    else if (buffer[0] == 127)
+    else if (buffer[0] == 127 || (buffer[0] == 27
+        && buffer[1] == 91 && buffer[2] == 51 && buffer[3] == 126))
     {
         if (tmp == *lst_cir)
             *lst_cir = (*lst_cir)->prev;
