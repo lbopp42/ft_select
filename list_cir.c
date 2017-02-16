@@ -12,7 +12,7 @@
 
 #include "ft_select.h"
 
-void	add_next_lst_cir(t_lst_cir **cour, t_lst_cir *new)
+void		add_next_lst_cir(t_lst_cir **cour, t_lst_cir *new)
 {
 	if (*cour == NULL)
 		*cour = new;
@@ -39,31 +39,16 @@ t_lst_cir	*create_lst_cir(char *content)
 	return (new);
 }
 
-void	ft_putlstcir_fd(t_lst_cir *lst_cir, int fd)
+t_lst_cir	*del_one_lst_cir(t_lst_cir *list_cir)
 {
-	t_lst_cir	*tmp;
-
-	if (lst_cir == NULL)
-		ft_putstr_fd("List is empty", 2);
-	else
-	{
-		/*if (lst_cir->curseur == 1)
-			printf("\033[4m\n");
-		if (lst_cir->select == 1)
-			printf("\033[7m\n");*/
-		ft_putstr_fd(lst_cir->content, fd);
-		tmp = lst_cir->prev;
-		while (tmp != lst_cir)
-		{
-			tputs(tgetstr("cr", NULL), 1, &test);
-			/*if (tmp->curseur == 1)
-				printf("\033[4m\n");
-			if (lst_cir->select == 1)
-				printf("\033[7m\n");*/
-			//tputs(tgetstr("ll", NULL), 1, &test);
-			ft_putstr_fd(tmp->content, fd);
-			//printf("\033[0m\n");
-			tmp = tmp->prev;
-		}
-	}
+	if (list_cir == NULL)
+		return (NULL);
+	list_cir->next->prev = list_cir->prev;
+	list_cir->prev->next = list_cir->next;
+	list_cir->prev->curseur = 1;
+	free(list_cir->content);
+	list_cir->content = NULL;
+	free(list_cir);
+	list_cir = NULL;
+	return (list_cir);
 }

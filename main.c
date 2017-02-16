@@ -69,6 +69,21 @@ void    check_touch(t_lst_cir **lst_cir, int fd)
         tmp->select = tmp->select ? 0 : 1;
         tmp->prev->curseur = 1;
     }
+    else if (buffer[0] == 127)
+    {
+        if (tmp == *lst_cir)
+            *lst_cir = (*lst_cir)->prev;
+        if (tmp->prev == tmp)
+        {
+            tmp = del_one_lst_cir(tmp);
+            default_term();
+            ft_putstr_fd(tgetstr("te", NULL), fd);
+            ft_putstr_fd(tgetstr("ve", NULL), fd);
+            close(fd);
+            exit(0);
+        }
+        tmp = del_one_lst_cir(tmp);
+    }
     open_window(lst_cir, fd);
 }
 
@@ -77,6 +92,8 @@ void    open_window(t_lst_cir **lst_cir, int fd)
     char        buffer[4];
     t_lst_cir   *tmp;
 
+    if (*lst_cir == NULL)
+        exit (0);
     ft_putstr_fd(tgetstr("cl", NULL), fd);
     if ((*lst_cir)->select == 1)
         ft_putstr_fd("\033[7m", fd);

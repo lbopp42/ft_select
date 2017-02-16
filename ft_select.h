@@ -34,7 +34,7 @@ typedef struct  s_lst_cir
 void        add_next_lst_cir(t_lst_cir **cour, t_lst_cir *new);
 t_lst_cir   *create_lst_cir(char *content);
 void		ft_putlstcir_fd(t_lst_cir *lst_cir, int fd);
-int     	voir_touche(t_lst_cir **lst_cir, int fd);
+t_lst_cir	*del_one_lst_cir(t_lst_cir *list_cir);
 int			test(int c);
 
 #endif
