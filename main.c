@@ -1,6 +1,6 @@
 #include "ft_select.h"
 
-void    open_window(t_lst_cir **lst_cir, int fd);
+void    open_window(t_lst_cir **lst_cir, int fd, int w_size);
 
 void    init_term(void)
 {
@@ -30,7 +30,19 @@ int    test(int c)
     return (1);
 }
 
-void    check_touch(t_lst_cir **lst_cir, int fd)
+void    move_to(int x, int y, int fd)
+{
+    char    *s;
+
+    s = ft_strjoin("\033[", ft_itoa(y));
+    s = ft_stradd(s, ";");
+    s = ft_stradd(s, ft_itoa(x));
+    s = ft_stradd(s, "H");
+    ft_putstr_fd(s, fd);
+    free(s);
+}
+
+void    check_touch(t_lst_cir **lst_cir, int fd, int w_size)
 {
     char        buffer[4];
     t_lst_cir   *tmp;
@@ -94,21 +106,33 @@ void    check_touch(t_lst_cir **lst_cir, int fd)
         print_select_lst_cir(*lst_cir);
         exit(0);   
     }
-    open_window(lst_cir, fd);
+    open_window(lst_cir, fd, w_size);
 }
 
-void    open_window(t_lst_cir **lst_cir, int fd)
+void    open_window(t_lst_cir **lst_cir, int fd, int w_size)
 {
     t_lst_cir   *tmp;
+    int         x;
+    int         y;
 
+    x = 1;
+    y = 1;
     if (*lst_cir == NULL)
         exit (0);
     ft_putstr_fd(tgetstr("cl", NULL), fd);
+    ft_putstr_fd("OK", fd);
     if ((*lst_cir)->select == 1)
         ft_putstr_fd("\033[7m", fd);
     if ((*lst_cir)->curseur == 1)
         ft_putstr_fd("\033[4m", fd);
-    ft_putendl_fd((*lst_cir)->content, fd);
+    ft_putstr_fd((*lst_cir)->content, fd);
+    if (y == w_size)
+    {
+        y = 1;
+        x += (*lst_cir)->size_max;
+    }
+    move_to(x, y + 1, fd);
+    y++;
     ft_putstr_fd("\033[0m", fd);
     tmp = (*lst_cir)->prev;
     while (tmp != *lst_cir)
@@ -117,35 +141,57 @@ void    open_window(t_lst_cir **lst_cir, int fd)
             ft_putstr_fd("\033[7m", fd);
         if (tmp->curseur == 1)
             ft_putstr_fd("\033[4m", fd);
-        ft_putendl_fd(tmp->content, fd);
+        ft_putstr_fd(tmp->content, fd);
         ft_putstr_fd("\033[0m", fd);
+        ft_putstr_fd(ft_itoa(w_size), fd);
+        ft_putstr_fd(ft_itoa(y), fd);
+        if (y == w_size)
+        {
+            y = 0;
+            x += tmp->size_max;
+        }
+        ft_putstr_fd(ft_itoa(x), fd);
+        move_to(x, y + 1, fd);
+        y++;
         tmp = tmp->prev;
     }
-    check_touch(lst_cir, fd);
+    check_touch(lst_cir, fd, w_size);
 }
 
 int     main(int ac, char *av[])
 {
-    int         i;
-    t_lst_cir   *lst_cir;
-    t_lst_cir   *new;
-    int         fd;
+    int             i;
+    t_lst_cir       *lst_cir;
+    t_lst_cir       *new;
+    int             fd;
+    int             len_max;
+    struct winsize  w;
 
     i = 1;
+    len_max = 0;
     lst_cir = NULL;
     fd = 0;
     fd = open("/dev/tty", O_RDWR);
+    ioctl(fd, TIOCGWINSZ, &w);
     init_term();
     while (i < ac)
     {
-        new = create_lst_cir(av[i]);
-        add_next_lst_cir(&lst_cir, new);
+        if (len_max < ft_strlen(av[i]))
+            len_max = ft_strlen(av[i]);
+        i++;
+    }
+    i = 1;
+    while (i < ac)
+    {
+        new = create_lst_cir(av[i], len_max);
+        add_next_lst_cir(&lst_cir, new, len_max);
         i++;
     }
     ft_putstr_fd(tgetstr("ti", NULL), fd);
     ft_putstr_fd(tgetstr("vi", NULL), fd);
     lst_cir->curseur = 1;
-    open_window(&lst_cir, fd);
+    //signal(SIGWINCH, &open_window);
+    open_window(&lst_cir, fd, w.ws_row);
     ft_putstr_fd(tgetstr("te", NULL), fd);
     ft_putstr_fd(tgetstr("ve", NULL), fd);
     return (0);

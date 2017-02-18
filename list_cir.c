@@ -12,7 +12,7 @@
 
 #include "ft_select.h"
 
-void		add_next_lst_cir(t_lst_cir **cour, t_lst_cir *new)
+void		add_next_lst_cir(t_lst_cir **cour, t_lst_cir *new, int len_max)
 {
 	if (*cour == NULL)
 		*cour = new;
@@ -21,11 +21,14 @@ void		add_next_lst_cir(t_lst_cir **cour, t_lst_cir *new)
 		(*cour)->next->prev = new;
 		new->next = (*cour)->next;
 		new->prev = *cour;
+		new->select = 0;
+		new->curseur = 0;
+		new->size_max = len_max;
 		(*cour)->next = new;
 	}
 }
 
-t_lst_cir	*create_lst_cir(char *content)
+t_lst_cir	*create_lst_cir(char *content, int len_max)
 {
 	t_lst_cir	*new;
 
@@ -35,6 +38,7 @@ t_lst_cir	*create_lst_cir(char *content)
 	new->prev = new;
 	new->select = 0;
 	new->curseur = 0;
+	new->size_max = len_max;
 	new->content = ft_strdup(content);
 	return (new);
 }
