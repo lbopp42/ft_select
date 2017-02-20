@@ -33,6 +33,12 @@ typedef struct  s_lst_cir
     struct s_lst_cir    *prev;
 }               t_lst_cir;
 
+typedef struct	s_info
+{
+	t_lst_cir	**lst_cir;
+	int			fd;
+}				t_info;
+
 void		add_next_lst_cir(t_lst_cir **cour, t_lst_cir *new, int len_max);
 t_lst_cir	*create_lst_cir(char *content, int len_max);
 void		ft_putlstcir_fd(t_lst_cir *lst_cir, int fd);

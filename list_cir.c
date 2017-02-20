@@ -62,12 +62,12 @@ void	print_select_lst_cir(t_lst_cir *list_cir)
 	t_lst_cir	*tmp;
 
 	if (list_cir->select)
-		ft_putstr(list_cir->content);
+		ft_putendsp(list_cir->content);
 	tmp = list_cir->prev;
 	while (tmp != list_cir)
 	{
 		if (tmp->select)
-		ft_putstr(tmp->content);
+		ft_putendsp(tmp->content);
 		tmp = tmp->prev;
 	}
 }
