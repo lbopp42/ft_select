@@ -4,9 +4,9 @@
 /*   list_cir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbopp <marvin@42.fr>                       +#+  +:+       +#+        */
-/*                              	                  +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/15 12:18:23 by lbopp             #+#    #+#             */
-/*   Updated: 2017/02/15 12:18:26 by lbopp            ###   ########.fr       */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/02/20 16:32:52 by lbopp             #+#    #+#             */
+/*   Updated: 2017/02/20 16:32:56 by lbopp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,20 @@ t_lst_cir	*del_one_lst_cir(t_lst_cir *list_cir)
 	return (list_cir);
 }
 
-void	print_select_lst_cir(t_lst_cir *list_cir)
+void		print_select_lst_cir(t_lst_cir *list_cir)
 {
 	t_lst_cir	*tmp;
 
 	if (list_cir->select)
-		ft_putendsp(list_cir->content);
+		ft_putstr(list_cir->content);
 	tmp = list_cir->prev;
 	while (tmp != list_cir)
 	{
 		if (tmp->select)
-		ft_putendsp(tmp->content);
+		{
+			write(1, " ", 1);
+			ft_putstr(tmp->content);
+		}
 		tmp = tmp->prev;
 	}
 }
