@@ -54,8 +54,8 @@ void		check_key(t_lst_cir **lst_cir, int fd)
 		tmp = *lst_cir;
 		while (tmp->curseur != 1)
 			tmp = tmp->prev;
-		(buffer[0] == 4 || buffer[0] == '\n') ?
-			exit_term(*lst_cir, fd, buffer) : 0;
+		(buffer[0] == 4 || buffer[0] == '\n' || (buffer[0] == 27 && !buffer[1]))
+		? exit_term(*lst_cir, fd, buffer) : 0;
 		treat_choice(lst_cir, tmp, fd, buffer);
 		draw_window(lst_cir, fd);
 	}
