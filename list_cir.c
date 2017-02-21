@@ -60,16 +60,22 @@ t_lst_cir	*del_one_lst_cir(t_lst_cir *list_cir)
 void		print_select_lst_cir(t_lst_cir *list_cir)
 {
 	t_lst_cir	*tmp;
+	static int	i = 0;
 
 	if (list_cir->select)
+	{
 		ft_putstr(list_cir->content);
+		i++;
+	}
 	tmp = list_cir->prev;
 	while (tmp != list_cir)
 	{
 		if (tmp->select)
 		{
-			write(1, " ", 1);
+			if (i != 0)
+				write(1, " ", 1);
 			ft_putstr(tmp->content);
+			i++;
 		}
 		tmp = tmp->prev;
 	}
