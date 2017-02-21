@@ -50,13 +50,13 @@ int			main(int ac, char *av[])
 	int				fd;
 	int				len_max;
 
+	init_term();
 	if (ac < 2)
 		return (0);
 	len_max = 0;
 	lst_cir = NULL;
 	fd = 0;
 	fd = open("/dev/tty", O_RDWR);
-	init_term();
 	len_max = count_len_max(ac, av);
 	fill_list_arg(ac, av, len_max, &lst_cir);
 	ft_putstr_fd(tgetstr("ti", NULL), fd);

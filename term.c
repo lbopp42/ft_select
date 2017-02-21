@@ -26,13 +26,21 @@ void	exit_term(t_lst_cir *lst_cir, int fd, char buffer[])
 void	init_term(void)
 {
 	struct termios	attr;
+	char			*term;
 
 	tcgetattr(STDIN_FILENO, &attr);
 	attr.c_lflag &= ~(ECHO | ICANON);
 	attr.c_cc[VMIN] = 1;
 	attr.c_cc[VTIME] = 0;
 	tcsetattr(STDIN_FILENO, TCSADRAIN, &attr);
-	tgetent(NULL, getenv("TERM"));
+	if (!(term = getenv("TERM")))
+	{
+		ft_putstr_fd("ft_select: environment not found\n", 2);
+		default_term();
+		exit(0);
+	}
+	else
+		tgetent(NULL, term);
 }
 
 void	default_term(void)
