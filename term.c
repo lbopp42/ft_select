@@ -14,9 +14,9 @@
 
 void	exit_term(t_lst_cir *lst_cir, int fd, char buffer[])
 {
-	default_term();
 	ft_putstr_fd(tgetstr("te", NULL), fd);
 	ft_putstr_fd(tgetstr("ve", NULL), fd);
+	default_term();
 	close(fd);
 	if (buffer[0] == '\n')
 		print_select_lst_cir(lst_cir);
@@ -25,10 +25,14 @@ void	exit_term(t_lst_cir *lst_cir, int fd, char buffer[])
 
 void	init_term(void)
 {
-	struct termios	attr;
 	char			*term;
+	struct termios	attr;
+	t_info			*info;
 
+	info = singleton(NULL);
+	tcgetattr(STDIN_FILENO, &info->init_term);
 	tcgetattr(STDIN_FILENO, &attr);
+	singleton(info);
 	attr.c_lflag &= ~(ECHO | ICANON);
 	attr.c_cc[VMIN] = 1;
 	attr.c_cc[VTIME] = 0;
@@ -45,10 +49,9 @@ void	init_term(void)
 
 void	default_term(void)
 {
-	struct termios	attr;
+	t_info	*info;
 
-	tcgetattr(STDIN_FILENO, &attr);
-	attr.c_lflag |= (ECHO | ICANON);
-	tcsetattr(STDIN_FILENO, TCSADRAIN, &attr);
+	info = singleton(NULL);
+	tcsetattr(STDIN_FILENO, TCSADRAIN, &info->init_term);
 	tgetent(NULL, getenv("TERM"));
 }

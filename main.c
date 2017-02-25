@@ -44,13 +44,22 @@ static void	fill_list_arg(int ac, char **av,
 	}
 }
 
+int 		put_my_char(int c)
+{
+	t_info	*info;
+
+	info = singleton(NULL);
+	write(info->fd, &c, 1);
+	return (1);
+}
+
 int			main(int ac, char *av[])
 {
 	t_lst_cir		*lst_cir;
 	int				fd;
 	int				len_max;
+	t_info			*info;
 
-	init_term();
 	if (ac < 2)
 		return (0);
 	len_max = 0;
@@ -59,14 +68,16 @@ int			main(int ac, char *av[])
 	fd = open("/dev/tty", O_RDWR);
 	len_max = count_len_max(ac, av);
 	fill_list_arg(ac, av, len_max, &lst_cir);
-	ft_putstr_fd(tgetstr("ti", NULL), fd);
-	ft_putstr_fd(tgetstr("vi", NULL), fd);
-	lst_cir->curseur = 1;
 	init_sigleton(&lst_cir, fd);
-	signal(SIGWINCH, &signalhandle);
-	draw_window(&lst_cir, fd);
-	check_key(&lst_cir, fd);
-	ft_putstr_fd(tgetstr("te", NULL), fd);
-	ft_putstr_fd(tgetstr("ve", NULL), fd);
+	manage_signal();
+	info = singleton(NULL);
+	init_term();
+	tputs(tgetstr("vi", NULL), 1, &put_my_char);
+	tputs(tgetstr("ti", NULL), 1, &put_my_char);
+	lst_cir->curseur = 1;
+	draw_window(&lst_cir, info->fd);
+	check_key(&lst_cir, info->fd);
+	tputs(tgetstr("te", NULL), 1, &put_my_char);
+	tputs(tgetstr("ve", NULL), 1, &put_my_char);
 	return (0);
 }

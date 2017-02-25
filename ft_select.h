@@ -35,8 +35,9 @@ typedef struct	s_lst_cir
 
 typedef struct	s_info
 {
-	t_lst_cir	**lst_cir;
-	int			fd;
+	t_lst_cir		**lst_cir;
+	int				fd;
+	struct termios	init_term;
 }				t_info;
 
 void			add_next_lst_cir(t_lst_cir **cour, t_lst_cir *new, int len_max);
@@ -49,7 +50,8 @@ void			exit_term(t_lst_cir *lst_cir, int fd, char buffer[]);
 void			init_sigleton(t_lst_cir **lst_cir, int fd);
 void			init_term(void);
 void			print_select_lst_cir(t_lst_cir *list_cir);
-void			signalhandle(int signum);
+int 			put_my_char(int c);
+void			manage_signal(void);
 t_info			*singleton(t_info *data);
 
 #endif
