@@ -37,7 +37,7 @@ static void		draw_first_elem(t_lst_cir **lst_cir, int fd, int *x, int *y)
 	if (*y == w.ws_row)
 	{
 		*y = 0;
-		*x += (*lst_cir)->size_max;
+		*x += (*lst_cir)->size_max + 1;
 	}
 	move_to(*x, *y + 1, fd);
 	*y += 1;
@@ -62,7 +62,7 @@ static void		draw_other_elem(t_lst_cir **lst_cir, int fd, int *x, int *y)
 		if (*y == w.ws_row)
 		{
 			*y = 0;
-			*x += tmp->size_max;
+			*x += tmp->size_max + 1;
 		}
 		move_to(*x, *y + 1, fd);
 		*y += 1;
