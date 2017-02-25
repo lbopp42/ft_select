@@ -50,8 +50,32 @@ static void	signalcont(int signum)
 	draw_window(info->lst_cir, info->fd);
 }
 
+static void	leave_clean(int signum)
+{
+	t_info	*info;
+
+	(void)signum;
+	info = singleton(NULL);
+	tputs(tgetstr("te", NULL), 1, &put_my_char);
+	tputs(tgetstr("ve", NULL), 1, &put_my_char);
+	close(info->fd);
+	exit(0);
+}
+
 void		manage_signal(void)
 {
+	int			i;
+	const int	sign_array[25] = {SIGABRT, SIGALRM, SIGFPE, SIGHUP, SIGILL,
+		SIGINT, SIGKILL, SIGPIPE, SIGQUIT, SIGSEGV, SIGTERM, SIGUSR1, SIGUSR2,
+		SIGCHLD, SIGSTOP, SIGTTIN, SIGTTOU, SIGBUS, SIGPROF, SIGSYS,
+		SIGTRAP, SIGURG, SIGVTALRM, SIGXCPU, SIGXFSZ};
+
+	i = 0;
+	while (i < 25)
+	{
+		signal(sign_array[i], &leave_clean);
+		i++;
+	}
 	signal(SIGWINCH, &signalhandle);
 	signal(SIGTSTP, &signalstop);
 	signal(SIGCONT, &signalcont);

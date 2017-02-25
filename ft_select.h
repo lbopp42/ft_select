@@ -14,6 +14,7 @@
 # define FT_SELECT_H
 
 # include <stdlib.h>
+# include <signal.h>
 # include <stdio.h>
 # include <string.h>
 # include <errno.h>
